@@ -32,6 +32,19 @@ io.on("connection", (socket) => {
 
     socket.emit("welcome", `Welcome to server ${socket.id}`);
 
+    socket.on("message", ({ message, room }) => {
+        console.log({ room, message });
+        io.to(room).emit("receive-message", message);
+    });
+
+    socket.on("join-room", (room) => {
+        socket.join(room);
+        console.log(`User joined room ${room}!`);
+    });
+
+    socket.on("disconnect", () => {
+        console.log(`User disconnected: `, socket.id);
+    });
 });
 
 server.listen(port, () => {
